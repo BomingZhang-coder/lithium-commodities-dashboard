@@ -233,9 +233,9 @@ if __name__ == '__main__':
     # combine_raw_data()
 
     break1 = time.time()
-    df = pd.read_csv(f"{curdir}../GDELT_lithium_news/news_merged_raw.csv", on_bad_lines='skip', dtype="string", encoding = "ISO-8859-1")
+    df = pd.read_csv(f"{curdir}../GDELT_lithium_news/lithium_news_raw.csv", on_bad_lines='skip', dtype="string", encoding = "ISO-8859-1")
     df_clean = pipeline(df)    
     print(df_clean)
     break2 = time.time()
     print(f"Total processing time: {round(break2-break1,2)} seconds")
-    df_clean.to_csv(f"{curdir}../GDELT_lithium_news/news_merged_clean.csv")
+    df_clean.to_csv(f"{curdir}../GDELT_lithium_news/lithium_news_clean.csv")
