@@ -1,0 +1,61 @@
+{
+    "mining": {
+        "Albemarle Corporation": ["albemarle"], 
+        "Allkem Limited": ["allkem", "orocobre"], 
+        "Altura Mining Limited": ["altura mining"], 
+        "American Lithium": ["american lithium"], 
+        "Arena Minerals Inc.": ["arena minerals"], 
+        "Critical Elements Lithium Corporation": ["critical elements", "critical elements lithium"], 
+        "Bacanora Lithium Ltd": ["bacanora lithium"], 
+        "EnerSys": ["enersys"], 
+        "Eramet SA": ["eramet sa", "eramet"], 
+        "European Metals Holdings Limited": ["european metals holdings"], 
+        "Galaxy Resources Limited": ["galaxy resources"],
+        "Ganfeng Lithium Co Ltd": ["ganfeng lithium"], 
+        "Infinity Lithium Corporation Limited": ["infinity lithium"], 
+        "International Lithium Corp.": ["international lithium"], 
+        "Jiangxi Special Electric Motor": ["jiangxi special electric motor"], 
+        "Lithium Americas Corporation": ["lithium americas"], 
+        "Lithium Energy Limited": ["lithium energy ltd", "lithium energy limited"], 
+        "Lithium Chile Inc.": ["lithium chile"], 
+        "Lithium Corporation": ["lithium corporation"], 
+        "Lithium Ionic Corp.": ["lithium ionic"], 
+        "Lithium Power International": ["lithium power international"], 
+        "Lithium South Development Corporation": ["lithium south development"], 
+        "Lithium X Energy Corp.": ["lithium x"], 
+        "Livent Corporation": ["livent"], 
+        "LSC Lithium Corporation": ["lsc lithium"], 
+        "Mineral Resources Limited": ["mineral resources"], 
+        "MGX Minerals Inc.": ["mgx minerals"], 
+        "Piedmont Lithium Ltd": ["piedmont lithium"], 
+        "Pilbara Minerals": ["pilbara minerals"], 
+        "QMC Quantum Minerals Corp.": ["qmc quantum minerals"], 
+        "RB Energy": ["rb energy"], 
+        "Rio Tinto": ["rio tinto"],
+        "Rock Tech Lithium Inc.": ["rock tech lithium"], 
+        "Sichuan Yahua Group": ["sichuan yahua group"], 
+        "Sigma Lithium Resources Corporation": ["sigma lithium resources"], 
+        "Sinomine Resource Group": ["sinomine resource"], 
+        "Sociedad Quimica y Minera de Chile SA": ["sociedad quimica y minera de chile sa", "SQM"], 
+        "Standard Lithium Ltd": ["standard lithium"], 
+        "Tianqi Lithium Corporation": ["tianqi lithium"], 
+        "Vulcan Energy Resources Limited": ["vulcan energy resources"], 
+        "Wealth Minerals Ltd.": ["wealth minerals"], 
+        "Yongxing Special Materials Technology": ["yongxing special materials technology"], 
+        "Zadar Ventures Ltd.": ["zadar ventures"]
+    },
+
+    "mines": {
+        "Greenbushes Lithium Mine": ["greenbushes mine", "greenbushes lithium", "greenbushes project"],
+        "Salar del Hombre Muerto": ["salar del hombre muerto"],
+        "Salar de Atacama": ["salar de atacama"],
+        "Mt Cattlin Lithium Mine": ["mt cattlin lithium mine", "mt cattlin mine"],
+        "Bikita Minerals": ["bikita minerals"],
+        "Mibra Lithium Mine": ["mibra lithium mine", "mimbra mine"],
+        "Mariana Lithium Mine": ["mariana lithium"]
+    },
+
+    "midstream": {
+
+    }
+}
