@@ -22,12 +22,6 @@ After installing Python, you need to install the required Python libraries. Run 
   pip install pandas numpy plotly
 
 
-
-
-
-
-
-
 ## Code Description
 
 This section explains the key components of the script for visualizing data related to lithium-ion batteries:
