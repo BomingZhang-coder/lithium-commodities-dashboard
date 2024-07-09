@@ -1,1 +1,83 @@
+import pandas as pd
+import numpy as np
+import plotly.graph_objs as go
+from plotly.subplots import make_subplots
+
+# Generate random data for battery types
+battery_types = ['LCO', 'LFP', 'NMC', 'NCA', 'LMO']
+
+# Random market shares (must sum to 100)
+market_shares = np.random.dirichlet(np.ones(len(battery_types)), size=1) * 100
+
+# Random portions of minerals used by each battery type
+minerals = ['Lithium', 'Cobalt', 'Nickel', 'Manganese', 'Iron']
+mineral_usage = np.random.rand(len(battery_types), len(minerals))
+
+# Normalize the mineral usage data to sum to 1 for each battery type
+mineral_usage = mineral_usage / mineral_usage.sum(axis=1)[:, None]
+
+# Generate random time series data for mineral prices
+dates = pd.date_range(start='2023-01-01', periods=12, freq='M')
+mineral_prices_ts = pd.DataFrame(
+    np.random.uniform(10000, 50000, (len(dates), len(minerals))),
+    columns=minerals,
+    index=dates
+)
+
+# Create dataframes
+market_share_df = pd.DataFrame({
+    'Battery Type': battery_types,
+    'Market Share (%)': market_shares.flatten()
+})
+market_share_df.set_index('Battery Type', inplace=True)
+
+mineral_usage_df = pd.DataFrame(mineral_usage, columns=minerals, index=battery_types)
+
+# Calculate weighted contribution and sum over time
+def calculate_index_over_time(date):
+    mineral_prices = mineral_prices_ts.loc[date]
+    index = 0
+    for battery_type in battery_types:
+        market_share = market_share_df.loc[battery_type, 'Market Share (%)'] / 100
+        usage = mineral_usage_df.loc[battery_type]
+        contribution = (usage * mineral_prices).sum() * market_share
+        index += contribution
+    return index
+
+index_over_time = mineral_prices_ts.index.to_series().apply(calculate_index_over_time)
+
+# Create subplots
+fig = make_subplots(
+    rows=4, cols=2,
+    specs=[[{"type": "pie"}, {"type": "bar"}],
+           [{"type": "bar", "colspan": 2}, None],
+           [{"type": "scatter", "colspan": 2}, None],
+           [{"type": "scatter", "colspan": 2}, None]],
+    subplot_titles=("Global Market Share", "Mineral Usage by Battery Type", "Mineral Prices", "Battery Scaled Index Over Time", "Mineral Prices Over Time")
+)
+
+# Pie chart for market share
+fig.add_trace(go.Pie(labels=market_share_df.index, values=market_share_df['Market Share (%)']), row=1, col=1)
+
+# Stacked bar chart for mineral usage
+for mineral in minerals:
+    fig.add_trace(go.Bar(name=mineral, x=mineral_usage_df.index, y=mineral_usage_df[mineral]), row=1, col=2)
+
+# Bar chart for mineral prices (last date)
+fig.add_trace(go.Bar(x=mineral_prices_ts.columns, y=mineral_prices_ts.iloc[-1]), row=2, col=1)
+
+# Line chart for index over time
+fig.add_trace(go.Scatter(x=index_over_time.index, y=index_over_time, mode='lines+markers', name='Scaled Index Over Time'), row=3, col=1)
+
+# Line chart for mineral prices over time
+for mineral in minerals:
+    fig.add_trace(go.Scatter(x=mineral_prices_ts.index, y=mineral_prices_ts[mineral], mode='lines+markers', name=f'{mineral} Price'), row=4, col=1)
+
+# Update layout
+fig.update_layout(
+    title="Lithium-ion Battery Market and Mineral Data Dashboard",
+    barmode='stack'
+)
+
+fig.show()
 
