@@ -25,9 +25,12 @@ summarizer = pipeline("summarization")
 
 # Function to get cleaned data from MongoDB
 def get_cleaned_data():
+    # Change the url to your mongodb connection
     uri = 'mongodb+srv://botongyuan00:Wojiaoybt1220@cluster0.okmf3dv.mongodb.net/lithium?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000'
     client = MongoClient(uri)
+    # Change this to your database
     db = client.lithium
+    # Change this to your collection
     collection = db.cleaned_data
     data = pd.DataFrame(list(collection.find()))
     return data
