@@ -45,11 +45,12 @@ def clean_and_process_data(data):
     return filtered_data
 
 def preprocess_data():
+    # Change the mongodb connection with your private account
     client = MongoClient('mongodb+srv://botongyuan00:Wojiaoybt1220@cluster0.okmf3dv.mongodb.net/')
     db = client.lithium
     processed_collection = db.cleaned_data
 
-    # Set the correct path for the data folder
+    # Set the folder path for your own use
     data_folder = '/Users/botongyuan/Desktop/raw-data'
     
     raw_data_files = [f for f in os.listdir(data_folder) if f.endswith('.csv')]
