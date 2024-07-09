@@ -19,7 +19,7 @@ Download and install Python from [python.org](https://www.python.org/downloads/)
 After installing Python, you need to install the required Python libraries. Run the following command to install them:
 
 ```bash
-pip install pandas numpy plotly```
+pip install pandas numpy plotly
 
 
 
