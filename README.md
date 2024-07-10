@@ -38,6 +38,6 @@ David: Completed [critical minerals index](critical_minerals_index-david), await
 
 Leo: Created a [dashboard](critical_minerals_index_dashboard-leo/LeoWang-Critical_Minerals_Dashboard) using dummy data, awaiting data from David after Dr Hamid's feedback
 
-Note: old files created by previous interns can be found [here](old_files)
+Note: old files created by previous interns can be found [here](old_files). The most useful ones for reference are all the analysis done on lithium news. 
 
 Last updated README.md July 10, 2024. 
