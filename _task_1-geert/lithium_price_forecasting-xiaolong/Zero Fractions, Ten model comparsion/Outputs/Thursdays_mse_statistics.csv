@@ -1,0 +1,11 @@
+,Model,R^2,Adj R^2,McCracken Stat,Significance 1%,Significance 5%,Significance 10%
+3,AR(1),0.555513177047838,0.5571178226180624,347.4403632341645,significant,significant,significant
+4,AR(2),0.5531946880093286,0.5564207191428352,344.1949304080883,significant,significant,significant
+7,AR(2) with Weekly Zero Interaction,0.553091895612974,0.5611588289051586,344.0518206562881,significant,significant,significant
+5,AR(1) with Weekly Zero Interaction,0.5431201052564556,0.5480682629612593,330.4750132330659,significant,significant,significant
+6,AR(1) with Monthly Zero Interaction,0.5346850932516728,0.5397246048771059,319.4448614653143,significant,significant,significant
+8,AR(2) with Monthly Zero Interaction,0.5316091783312928,0.5400638863036522,315.52145076111117,significant,significant,significant
+9,AR(2) with Separate Weekly and Monthly Zero Interactions,0.5308434996977309,0.5410057343613179,314.55280449250864,significant,significant,significant
+0,Model with Only Constant,0.0,0.0,0.0,not significant,not significant,not significant
+1,Model with Weekly Zero,-0.01905073331557028,-0.015371849801795623,-5.197095383560765,not significant,not significant,not significant
+2,Model with Monthly Zero,-0.02197460475834956,-0.018285165752001564,-5.977585053853333,not significant,not significant,not significant
