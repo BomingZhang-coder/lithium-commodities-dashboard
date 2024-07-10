@@ -23,7 +23,7 @@ Dr Hamid wants to create a critical minerals index to track the price of the raw
 
 ## Dr Hamid's critical minerals index project:
 
-David: Completed critical minerals index, awaiting Dr Hamid's feedback. [critical minerals index code](critical_minerals_index-david)
+David: Completed [critical minerals index](critical_minerals_index-david), awaiting Dr Hamid's feedback. 
 
 Leo: Created a [dashboard](Leo-Wang/LeoWang-Critical_Minerals_Dashboard) using dummy data, awaiting data from David after Dr Hamid's feedback
 
