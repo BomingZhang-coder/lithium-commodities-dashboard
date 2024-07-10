@@ -1,0 +1,11 @@
+,Model,RMSE
+4,AR(2),0.03319323376216553
+3,AR(1),0.03347683497575105
+7,AR(2) with Weekly Zero Interaction,0.03405335419043286
+5,AR(1) with Weekly Zero Interaction,0.034065014359989744
+6,AR(1) with Monthly Zero Interaction,0.03411353705615823
+8,AR(2) with Monthly Zero Interaction,0.03424400124657069
+9,AR(2) with Separate Weekly and Monthly Zero Interactions,0.03428830145726344
+0,Model with Only Constant,0.047601851591042715
+1,Model with Weekly Zero,0.048056696113039886
+2,Model with Monthly Zero,0.04812928878062246
