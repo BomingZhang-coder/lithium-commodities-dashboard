@@ -1,1 +1,0 @@
-Summary on various machine learning techniques - summarized by Haixin
