@@ -38,4 +38,5 @@ David: Completed [critical minerals index](critical_minerals_index-david), await
 
 Leo: Created a [dashboard](critical_minerals_index_dashboard-leo/LeoWang-Critical_Minerals_Dashboard) using dummy data, awaiting data from David after Dr Hamid's feedback
 
-Last updated July 10, 2024. 
+
+Last updated README.md July 10, 2024. 
