@@ -19,7 +19,7 @@ Dr Hamid wants to create a critical minerals index to track the price of the raw
 
 [Task 3:](_task_3-geert) This is just a sample, produced by Eli (Yile). Once we have data from the data science team, we can do more comprehensive analysis.
 
-[Critical Mineral Index:](_critical_minerals_index-hamid)
+[Critical Mineral Index:](_critical_minerals_index-hamid) Includes the code and the dashboard for the critical minerals index. Dashboard is not using the data from the index yet. 
 
 ## Professor Geert's lithium price forecasting project
 
