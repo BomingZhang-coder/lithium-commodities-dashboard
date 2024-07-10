@@ -14,8 +14,11 @@ Dr Hamid wants to create a critical minerals index to track the price of the raw
 ## Most recent files: Last updated July 10, 2024
 
 [Task 1:](_task_1-geert) Xiaolong's work on AR models is priceless. David is continuing his work with other models, such as ARMA, as requested by the professor. 
+
 [Task 2:](_task_2-geert) Birdy's work is still the most recent. We need to understand and either utilise it or use it as inspiration to re-create it. 
+
 [Task 3:](_task_3-geert) This is just a sample, produced by Eli (Yile). Once we have data from the data science team, we can do more comprehensive analysis.
+
 [Critical Mineral Index:](_critical_minerals_index-hamid)
 
 ## Professor Geert's lithium price forecasting project
