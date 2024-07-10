@@ -25,6 +25,6 @@ Dr Hamid wants to create a critical minerals index to track the price of the raw
 
 David: Completed [critical minerals index](critical_minerals_index-david), awaiting Dr Hamid's feedback. 
 
-Leo: Created a [dashboard](Leo-Wang/LeoWang-Critical_Minerals_Dashboard) using dummy data, awaiting data from David after Dr Hamid's feedback
+Leo: Created a [dashboard](critical_minerals_index-leo/LeoWang-Critical_Minerals_Dashboard) using dummy data, awaiting data from David after Dr Hamid's feedback
 
 Last updated July 10, 2024. 
