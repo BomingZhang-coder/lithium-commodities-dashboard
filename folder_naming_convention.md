@@ -5,6 +5,7 @@
 - Please use all lowercase
 - Use a dash to separate the project name and your name, and underscores everywhere else - do not use spaces
 - Try to keep it short and descriptive
+- Try not to use special characters, i.e., !@#$%^&*
 
 Examples: 
 - "lithium_modeling-birdy"
