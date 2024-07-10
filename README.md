@@ -12,8 +12,7 @@ Professor Geert is attempting to forecast the price of lithium via 3 different m
 Dr Hamid wants to create a critical minerals index to track the price of the raw materials required to create a standard EV lithium-ion battery by factoring in market share of various lithium-ion batteries, spot prices of required minerals, and how much of each mineral is required to make the various batteries. As of July 10, 2024, this index has been created and is under review. 
 
 ## Most recent files
-
-###Last updated July 10, 2024
+### Last updated July 10, 2024
 
 [Task 1:](_task_1-geert) Xiaolong's work on AR models is priceless. David is continuing his work with other models, such as ARMA, as requested by the professor. 
 
