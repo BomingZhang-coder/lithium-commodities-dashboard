@@ -15,11 +15,11 @@ Dr Hamid wants to create a critical minerals index to track the price of the raw
 
 ### Team members and progress
 
-1. David: Digested Xiaolong's previous work and completed in-sample ARMA models, going to email professor results shortly. 
+1. David: Digested [Xiaolong's previous work](lithium_price_forecasting-xiaolong) and completed [in-sample ARMA models](lithium_price_forecasting_task_1-david), going to email professor results shortly. 
 
 2. Lily, Leo, Eli, Rashibh: Completing report on Birdy's past progress located in this [folder](task_2-birdy) that has made plenty of progress identyfing the list of companies we are working with, getting their stock data, standardizing currency, etc. Digesting this [folder](lithium_modeling-birdy) which seems to model the price of lithium via the work Birdy did on the mining companies. 
 
-3. Eli: Requesting queries, finding relevant columns, to share with the data science team to query lithium news data
+3. Eli: Requesting queries, finding relevant columns, to share with the data science team to query lithium news data. [Sample analysis on news](lithium_news_analysis-yile/Sample.ipynb)
 
 ## Dr Hamid's critical minerals index project:
 
