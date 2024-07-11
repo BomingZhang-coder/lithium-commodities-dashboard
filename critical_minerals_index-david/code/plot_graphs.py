@@ -30,5 +30,5 @@ def plot_battery_cost(cost_df):
     plt.xlabel("Date")
     plt.ylabel("USD$")
     #plt.title("Cost of Battery Cathode in Standard EV")
-    plt.title("Scaled Cost of Battery Cathode in Standard EV by Market Share")
+    plt.title("Cost of Raw Materials in Standard EV Cathode + Anode Scaled by Market Share")
     plt.show()
