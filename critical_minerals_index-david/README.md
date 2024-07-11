@@ -1,9 +1,5 @@
 # Critical Minerals Index
 
-As per Dr Hamid's request, I am creating a critical minerals index to track the price of the raw components required to create a standard EV battery. 
+Last updated: July 11, 2024
 
-Current progress: 
-- 
-
-Future work: 
-- 
+The critical minerals index includes both the cathode and anode price. It is under review by Dr Hamid and may be subject to change once new information is uploaded. 
