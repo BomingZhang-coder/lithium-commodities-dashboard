@@ -54,7 +54,7 @@ def get_costs(minerals_required, spot_prices_df, battery_names):
             battery_cost_df[mineral] *= battery[mineral]
         battery_cost_df["total_cost"] = battery_cost_df.sum(axis = 1)
         #all_costs.append(battery_cost_df["total_cost"])
-        cost_df[battery_names[name_index] + " Cathode Cost"] = battery_cost_df["total_cost"].round(2)
+        cost_df[battery_names[name_index] + " Cathode + Anode Cost"] = battery_cost_df["total_cost"].round(2)
         name_index += 1
         
     return cost_df

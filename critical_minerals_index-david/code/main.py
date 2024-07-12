@@ -130,9 +130,6 @@ flakey_graphite_price = {
 # # Show the plot
 # plt.show()
 
-plt.figure(figsize = (12, 12))
-plt.bar
-
 # Names dictionary
 names = {
 }
@@ -151,7 +148,7 @@ print(battery_names)
 battery_compositions = batteries.values()
 
 # Average EV battery capacity in kWh
-average_battery_capacity = 72.5 # kWh
+average_battery_capacity = 1 # kWh
 
 # Scale the amount of each mineral by the average battery capacity to get amount required in ton
 minerals_required = get_amounts(battery_compositions, average_battery_capacity)
@@ -202,13 +199,13 @@ for column in filtered_cost_df.columns:
 #plot_battery_cost(critical_minerals_index)
 
 critical_minerals_index["Conglomerate Cost"] = critical_minerals_index.sum(axis = 1)
-# plt.figure(figsize=(12, 12))
-# plt.grid()
-# plt.xlabel("Date")
-# plt.ylabel("USD$")
-# plt.plot(critical_minerals_index.index, critical_minerals_index["Conglomerate Cost"])
-# plt.title("Conglomerated Scaled Cost of Battery Cathode + Anode in Standard EV")
-# plt.show()
+plt.figure(figsize=(12, 12))
+plt.grid()
+plt.xlabel("Date")
+plt.ylabel("USD$")
+plt.plot(critical_minerals_index.index, critical_minerals_index["Conglomerate Cost"])
+plt.title("Conglomerated Scaled Cost of Battery Cathode + Anode in Standard EV")
+plt.show()
 
 normalisation_factor = critical_minerals_index["Conglomerate Cost"].iloc[0] / 100
 critical_minerals_index["Index"] = critical_minerals_index["Conglomerate Cost"]/normalisation_factor
@@ -218,21 +215,32 @@ critical_minerals_index["Index"].to_csv("Critical Minerals Index.csv")
 #print(critical_minerals_index)
 # Russia invades Ukraine on Feb 24, 2022
 value_near_feb24 = critical_minerals_index["Index"].loc["2022-03-01"]
+
 # COVID announced
 value_on_jan20 = critical_minerals_index["Index"].loc["2020-01-01"]
-#print(value_near_feb24)
+
+# US and Japan sign critical minerals agreement act
+value_on_mar28 = critical_minerals_index["Index"].loc["2023-04-01"]
+
+# Israel-Hamas war
 value_on_oct23 = critical_minerals_index["Index"].loc["2023-10-01"]
 
+# COP28 UN Climate Change Conference
 value_on_dec13 = critical_minerals_index["Index"].loc["2023-12-01"]
 
-plt.figure(figsize=(12, 12))
-plt.grid()
-plt.xlabel("Date")
-plt.plot(critical_minerals_index.index, critical_minerals_index["Index"])
-plt.scatter(datetime.strptime("2022-02-24", "%Y-%m-%d"), value_near_feb24, label = "Russia invades Ukraine on Feb 24, 2022", color = "orange")
-plt.scatter(datetime.strptime("2020-01-01", "%Y-%m-%d"), value_on_jan20, label = "COVID announced", color = "green")
-plt.scatter(datetime.strptime("2023-10-07", "%Y-%m-%d"), value_on_oct23, label = "Israel-Hamas War", color = "purple")
-plt.scatter(datetime.strptime("2023-12-13", "%Y-%m-%d"), value_on_dec13, label = "COP28 agrees on transition away from fossil fuels", color = "magenta")
-plt.title("Critical Minerals Index")
-plt.legend()
-#plt.show()
+# Trump declares tariffs on steel and aluminium
+value_on_mar1 = critical_minerals_index["Index"].loc["2018-03-01"]
+
+# plt.figure(figsize=(12, 12))
+# plt.grid()
+# plt.xlabel("Date")
+# plt.plot(critical_minerals_index.index, critical_minerals_index["Index"])
+# plt.scatter(datetime.strptime("2018-03-01", "%Y-%m-%d"), value_on_mar1, label = "Trump declares tariffs on steel and aluminium", color = "red")
+# plt.scatter(datetime.strptime("2020-01-01", "%Y-%m-%d"), value_on_jan20, label = "COVID announced", color = "orange")
+# plt.scatter(datetime.strptime("2022-02-24", "%Y-%m-%d"), value_near_feb24, label = "Russia invades Ukraine on Feb 24, 2022", color = "green")
+# plt.scatter(datetime.strptime("2023-03-28", "%Y-%m-%d"), value_on_mar28, label = "US and Japan sign critical minerals trade agreement", color = "blue")
+# plt.scatter(datetime.strptime("2023-10-07", "%Y-%m-%d"), value_on_oct23, label = "Israel-Hamas War", color = "purple")
+# plt.scatter(datetime.strptime("2023-12-13", "%Y-%m-%d"), value_on_dec13, label = "COP28 agrees on transition away from fossil fuels", color = "pink")
+# plt.title("Critical Minerals Index")
+# plt.legend()
+# plt.show()
