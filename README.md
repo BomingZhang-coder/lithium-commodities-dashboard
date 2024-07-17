@@ -44,3 +44,12 @@ Leo: Created a [dashboard](critical_minerals_index_dashboard-leo/LeoWang-Critica
 Note: old files created by previous interns can be found [here](old_files). The most useful ones for reference are all the analysis done on lithium news. 
 
 Last updated README.md July 10, 2024. 
+
+## FMF Project  - Update data till Present 
+
+https://drive.google.com/drive/u/1/folders/1lnzT_3ikOJA6I83e94gFmqXNFrK0fiou
+
+
+
+
+
