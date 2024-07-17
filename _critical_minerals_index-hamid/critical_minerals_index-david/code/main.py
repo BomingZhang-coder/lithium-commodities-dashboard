@@ -7,7 +7,8 @@ from plot_graphs import (
     plot_spot_prices, 
     plot_battery_cost, 
     plot_scaled_battery_cost,
-    plot_conglomerated_scaled_cost
+    plot_conglomerated_scaled_cost, 
+    plot_critical_minerals_index
 )
 from utilities import download_results
 
@@ -146,7 +147,8 @@ average_battery_capacity = 1 # kWh
 
 # Scale the amount of each mineral by the average battery capacity to get amount required in ton
 minerals_required = get_amounts(battery_compositions, average_battery_capacity)
-minerals_required_data = pd.DataFrame(minerals_required)
+minerals_required_data = pd.DataFrame(minerals_required, index = battery_names)
+
 download_results(minerals_required_data, output_folder, "minerals_required_to_make_each_battery")
 
 # Get mineral spot prices in USD/ton
@@ -198,6 +200,7 @@ normalisation_factor = critical_minerals_index["Conglomerate Cost"].iloc[0] / 10
 critical_minerals_index["Index"] = critical_minerals_index["Conglomerate Cost"]/normalisation_factor
 name = "critical_minerals_index"
 download_results(critical_minerals_index["Index"], output_folder, name)
+plot_critical_minerals_index(critical_minerals_index, output_folder, name)
 
 #print(critical_minerals_index)
 # Russia invades Ukraine on Feb 24, 2022
@@ -231,3 +234,13 @@ plt.scatter(datetime.strptime("2023-12-13", "%Y-%m-%d"), value_on_dec13, label =
 plt.title("Critical Minerals Index")
 plt.legend()
 plt.show()
+
+# More analysis
+#print(critical_minerals_index["Conglomerate Cost"])
+#(spot_prices_df)
+
+# Find percentage of each mineral in the critical minerals index
+
+# Do a correlation study, i.e., plot the spot prices of each critical mineral 
+
+# Goal: find the critical mineral that has the most impact

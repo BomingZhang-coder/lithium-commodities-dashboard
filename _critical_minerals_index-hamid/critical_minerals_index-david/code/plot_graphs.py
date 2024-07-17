@@ -92,3 +92,14 @@ def plot_conglomerated_scaled_cost(critical_minerals_index, output, name):
     # Save plot as png
     plt.savefig(f"{output}/{name}.png")
     plt.show()
+
+def plot_critical_minerals_index(critical_minerals_index, output, name):
+    plt.figure(figsize=(18, 12))
+    plt.grid()
+    plt.xlabel("Date")
+    plt.ylabel("Index relative to 100 since beginning")
+    plt.plot(critical_minerals_index.index, critical_minerals_index["Index"])
+    plt.title("Critical Minerals Index")
+    # Save plot as png
+    plt.savefig(f"{output}/{name}.png")
+    plt.show()

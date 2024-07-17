@@ -43,7 +43,6 @@ def get_costs(minerals_required, spot_prices_df, battery_names):
     
     cost_df = pd.DataFrame()
     
-    all_costs = []
     name_index = 0
     for battery in minerals_required: 
         # Get the minerals required to make the battery
