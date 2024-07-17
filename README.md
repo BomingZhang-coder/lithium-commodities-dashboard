@@ -47,7 +47,16 @@ Last updated README.md July 10, 2024.
 
 ## FMF Project  - Update data till Present 
 
+This is the folder with analysis +data, including work done by Leo Cui on FMF and Power point 
+
 https://drive.google.com/drive/u/1/folders/1lnzT_3ikOJA6I83e94gFmqXNFrK0fiou
+
+Power Point with output and analysis is here
+
+https://docs.google.com/presentation/d/1owoTnsErIuZO83w8kjulZx77uKrHKP4AH14Vhp9yCIs/edit?usp=sharing
+
+
+
 
 
 
