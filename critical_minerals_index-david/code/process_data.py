@@ -7,7 +7,7 @@ def get_amounts(batteries, average_battery_capacity):
             if isinstance(amount, list): 
                 # Average numbers in the list
                 battery[mineral] = sum(amount)/len(amount)
-            battery[mineral] = battery[mineral] * average_battery_capacity / 1000
+            battery[mineral] = battery[mineral] * average_battery_capacity / 1000 # Convert to tons
     return batteries
 
 # Function to extract IMF data about mineral spot prices
