@@ -1,7 +1,12 @@
 import pandas as pd 
 import matplotlib.pyplot as plt
 from process_data import get_amounts, get_imf_data, get_phosphate_data, get_costs
-from plot_graphs import plot_spot_prices, plot_battery_cost
+from plot_graphs import (
+    plot_flakey_graphite_prices,
+    plot_spot_prices, 
+    plot_battery_cost, 
+    plot_conglomerated_scaled_cost
+)
 from datetime import datetime
 
 # Dictionary containing the market share of various lithium-ion batteries from 2018 to 2023
@@ -101,7 +106,7 @@ NMC_high_nickel = {
 }
 
 # Price of flankey USD/ton
-flakey_graphite_price = {
+flakey_graphite_prices = {
     "2018": 1520, 
     "2019": 1340, 
     "2020": 1340, 
@@ -110,25 +115,7 @@ flakey_graphite_price = {
     "2023": 1200, 
     "2024": 1200 # Assuming it has stayed somewhat constant past 2023
 }
-
-# # Extracting years and prices for plotting
-# years = list(flakey_graphite_price.keys())
-# prices = list(flakey_graphite_price.values())
-
-# # Creating the scatter plot
-# plt.figure(figsize=(10, 5))  # Set the figure size
-# plt.plot(years, prices, color = 'blue')  # Plotting the points
-
-# # Adding title and labels
-# plt.title('Flakey Graphite Price Over Years')
-# plt.xlabel('Year')
-# plt.ylabel('Price (USD per ton)')
-
-# # Optional: Add a grid for better readability
-# plt.grid(True)
-
-# # Show the plot
-# plt.show()
+#plot_flakey_graphite_prices(flakey_graphite_prices)
 
 # Names dictionary
 names = {
@@ -160,22 +147,7 @@ phosphate_df = get_phosphate_data()
 spot_prices_df = imf_df.join(phosphate_df, how = "outer")
 # Rename minerals column to match battery dictionaries
 spot_prices_df.columns = ["nickel", "iron", "aluminium", "cobalt", "lithium", "manganese", "phosphorous", "silicon", "natural graphite"]
-
-plt.figure(figsize = (12, 12))
-for column in spot_prices_df.columns.to_list():
-    #print(column)
-    # if column == "lithium" or column == "cobalt" or column == "nickel":
-        
-    # else:
-    #     pass
-    plt.plot(spot_prices_df.index, spot_prices_df[column], label = column)
-plt.grid()
-plt.legend()
-plt.xlabel("Date")
-plt.ylabel("Price (USD per ton)")
-plt.title("Mineral Price change over time")
-plt.savefig("mineral_prices")
-#plt.show()
+plot_spot_prices(spot_prices_df, "all")
 
 cost_df = get_costs(minerals_required, spot_prices_df, battery_names)
 #plot_battery_cost(cost_df)
@@ -196,16 +168,10 @@ for column in filtered_cost_df.columns:
         filtered_cost_df[column + "_market_share"] = filtered_cost_df["Year"].map(market_share_df[column])
         critical_minerals_index[column] = filtered_cost_df[column] * filtered_cost_df[column + "_market_share"]
 # filtered_cost_df = filtered_cost_df.drop("Year", axis = 1)
-#plot_battery_cost(critical_minerals_index)
+plot_battery_cost(critical_minerals_index)
 
 critical_minerals_index["Conglomerate Cost"] = critical_minerals_index.sum(axis = 1)
-plt.figure(figsize=(12, 12))
-plt.grid()
-plt.xlabel("Date")
-plt.ylabel("USD$")
-plt.plot(critical_minerals_index.index, critical_minerals_index["Conglomerate Cost"])
-plt.title("Conglomerated Scaled Cost of Battery Cathode + Anode in Standard EV")
-plt.show()
+plot_conglomerated_scaled_cost(critical_minerals_index)
 
 normalisation_factor = critical_minerals_index["Conglomerate Cost"].iloc[0] / 100
 critical_minerals_index["Index"] = critical_minerals_index["Conglomerate Cost"]/normalisation_factor
@@ -231,16 +197,16 @@ value_on_dec13 = critical_minerals_index["Index"].loc["2023-12-01"]
 # Trump declares tariffs on steel and aluminium
 value_on_mar1 = critical_minerals_index["Index"].loc["2018-03-01"]
 
-# plt.figure(figsize=(12, 12))
-# plt.grid()
-# plt.xlabel("Date")
-# plt.plot(critical_minerals_index.index, critical_minerals_index["Index"])
-# plt.scatter(datetime.strptime("2018-03-01", "%Y-%m-%d"), value_on_mar1, label = "Trump declares tariffs on steel and aluminium", color = "red")
-# plt.scatter(datetime.strptime("2020-01-01", "%Y-%m-%d"), value_on_jan20, label = "COVID announced", color = "orange")
-# plt.scatter(datetime.strptime("2022-02-24", "%Y-%m-%d"), value_near_feb24, label = "Russia invades Ukraine on Feb 24, 2022", color = "green")
-# plt.scatter(datetime.strptime("2023-03-28", "%Y-%m-%d"), value_on_mar28, label = "US and Japan sign critical minerals trade agreement", color = "blue")
-# plt.scatter(datetime.strptime("2023-10-07", "%Y-%m-%d"), value_on_oct23, label = "Israel-Hamas War", color = "purple")
-# plt.scatter(datetime.strptime("2023-12-13", "%Y-%m-%d"), value_on_dec13, label = "COP28 agrees on transition away from fossil fuels", color = "pink")
-# plt.title("Critical Minerals Index")
-# plt.legend()
-# plt.show()
+plt.figure(figsize=(12, 12))
+plt.grid()
+plt.xlabel("Date")
+plt.plot(critical_minerals_index.index, critical_minerals_index["Index"])
+plt.scatter(datetime.strptime("2018-03-01", "%Y-%m-%d"), value_on_mar1, label = "Trump declares tariffs on steel and aluminium", color = "red")
+plt.scatter(datetime.strptime("2020-01-01", "%Y-%m-%d"), value_on_jan20, label = "COVID announced", color = "orange")
+plt.scatter(datetime.strptime("2022-02-24", "%Y-%m-%d"), value_near_feb24, label = "Russia invades Ukraine on Feb 24, 2022", color = "green")
+plt.scatter(datetime.strptime("2023-03-28", "%Y-%m-%d"), value_on_mar28, label = "US and Japan sign critical minerals trade agreement", color = "blue")
+plt.scatter(datetime.strptime("2023-10-07", "%Y-%m-%d"), value_on_oct23, label = "Israel-Hamas War", color = "purple")
+plt.scatter(datetime.strptime("2023-12-13", "%Y-%m-%d"), value_on_dec13, label = "COP28 agrees on transition away from fossil fuels", color = "pink")
+plt.title("Critical Minerals Index")
+plt.legend()
+plt.show()
