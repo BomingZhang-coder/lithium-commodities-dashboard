@@ -13,8 +13,16 @@ from data_analysis import (
     get_multiplied_columns, 
     add_constant_column
 )
-from data_modelling import get_model
-from utilities import remove_nan
+from data_modelling import (
+    replace_k_in_keys,
+    get_model_results,
+    get_phi,
+    fit_non_linear_ar1_model
+)
+from utilities import (
+    remove_nan,
+    download_results
+)
 
 
 #########################################################
@@ -83,30 +91,41 @@ weekly_data = add_constant_column(weekly_data)
 #################### DATA MODELLING #####################
 #########################################################
 
-# Constants to be found for new models 1. and 2. 
-constants = {
+# Constants to be found for new AR models 1 and 2
+constants_dict = {
     "alpha(0)": "alpha(0)",
-    "phi(1,0)": "r(t-1)",
-    "phi(1,1)": "z(t-1,k)*r(t-1)",
-    "phi(2,0)": "r(t-2)",
-    "phi(2,1)": "z(t-2,k)*r(t-2)"
+    "r(t-1)": "phi(1,0)",
+    "z(t-1,k)*r(t-1)": "phi(1,1)",
+    "r(t-2)": "phi(2,0)",
+    "z(t-2,k)*r(t-2)": "phi(2,1)"
 }
-columns = list(constants.values())
 
-# New model 1. 
+### New AR(2) model 1 ###
 k_values = (5, 22)
 for k in k_values:
-    X = [column.replace('k', str(k)) for column in columns]
+    k_constants_dict = replace_k_in_keys(constants_dict, k)
     y = "r(t)"
-    model = get_model(weekly_data, X, y)
+    models, results = get_model_results(weekly_data, k_constants_dict, y)
+    download_results(results, f"new_model_1_AR(2)_zero_fraction_{k}.csv")
     
-# New model 2. 
+### New AR(2) model 2 ###
 k = 10
-X = [column.replace('k', str(k)) for column in columns]
+k_constants_dict = replace_k_in_keys(constants_dict, k)
 y = "r(t)"
-model = get_model(weekly_data, X, y)
+models, results = get_model_results(weekly_data, k_constants_dict, y)
+download_results(results, f"new_model_2_AR(2)_zero_fraction_{k}.csv")
 
-# constants = {
-#     "alpha(0)": "alpha(0)",
-#     "phi": 
-# }
+### New AR(1) model 3 ###
+# We are required to find the parameters for a simple AR(1) model 
+constants_dict = {
+    "alpha(0)": "alpha(0)",
+    "r(t-1)": "phi"
+}
+y = "r(t)"
+models, results = get_model_results(weekly_data, constants_dict, y)
+phi_estimate = get_phi(results) # Averages phi value over all the week days
+
+# Now that we have our phi estimate we can use it in our model
+results = fit_non_linear_ar1_model(weekly_data, phi_estimate)
+download_results(results, f"new_model_3_AR(1)_zero_fraction_5.csv")
+

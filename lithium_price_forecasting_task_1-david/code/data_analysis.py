@@ -83,3 +83,9 @@ def add_constant_column(weekly_data):
     for days, data in weekly_data.items():
         data["alpha(0)"] = 1
     return weekly_data
+
+# Function to generate x(t-1)
+def get_logistic_column(weekly_data):
+    for days, data in weekly_data.items():
+        data
+    return weekly_data
