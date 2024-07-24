@@ -35,7 +35,7 @@ Dr Hamid wants to create a critical minerals index to track the price of the raw
 
 3. Eli: Requesting queries, finding relevant columns, to share with the data science team to query lithium news data. [Sample analysis on news](lithium_news_analysis-yile/Sample.ipynb)
 
-4. Emma, Rishabh: Digested Birdy's previous work on [folder](task_2-birdy) Mining Company Regression. Updating the code for [folder](Li2CO3-time-series-regression) given the new company lists.
+4. Emma, Rishabh: Digested Birdy's previous work on [folder](task_2-birdy) Mining Company Regression. Updating the code for [time-series-regression](3.Li2CO3-time-series-regression) given the new company lists.
 
 ## Dr Hamid's critical minerals index project:
 
