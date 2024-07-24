@@ -57,3 +57,72 @@ def get_costs(minerals_required, spot_prices_df, battery_names):
         name_index += 1
         
     return cost_df
+
+def get_mineral_market_share(names, minerals_required_data, spot_prices_df, market_share_df):
+    minerals_required_data.rename(index = names, inplace = True)
+    
+    years = market_share_df.index.tolist()
+    
+    scaled_minerals_required = pd.DataFrame(index = years)
+    
+    yearly_minerals_required = {}
+    
+    for year in years: 
+        market_shares = market_share_df.loc[year]
+        
+        batteries = market_shares.index.tolist()
+        
+        minerals_required = []
+        for battery in batteries: 
+            if battery.lower() != "other":
+                minerals_required.append(market_shares.loc[battery] * minerals_required_data.loc[battery])
+                
+        yearly_minerals_required[year] = minerals_required
+
+
+    yearly_total_minerals_required = {}
+
+    # Iterate through the dictionary
+    for year, series_list in yearly_minerals_required.items():
+        # Create an empty series to store the sum of minerals
+        sum_series = pd.Series(dtype=float)
+        for series in series_list:
+            sum_series = sum_series.add(series, fill_value=0)
+        
+        yearly_total_minerals_required[year] = sum_series
+
+    # Create a DataFrame from the dictionary
+    mineral_share_df = pd.DataFrame(yearly_total_minerals_required).T
+    
+    # Display the DataFrame
+    # print(mineral_share_df)
+    # print(spot_prices_df.dropna())
+    
+    # Ensure columns match and fill any missing columns with zeroes
+    required_minerals = mineral_share_df.columns
+    spot_prices_df = spot_prices_df[required_minerals].fillna(0)
+
+    # Function to get the requirement year from the date
+    def get_requirement_year(date):
+        return date.year
+
+    # Apply the function to get the corresponding year requirements for each month
+    years = spot_prices_df.index.year
+    requirements_for_each_month = mineral_share_df.reindex(years).reset_index(drop=True)
+
+    # Multiply each row by the corresponding year requirements to get individual mineral costs
+    individual_costs = spot_prices_df.values * requirements_for_each_month.values
+
+    # Create a DataFrame with the individual mineral costs and the corresponding dates
+    df_individual_costs = pd.DataFrame(individual_costs, index=spot_prices_df.index, columns=spot_prices_df.columns)
+
+    df_individual_costs.dropna(inplace = True)
+    
+    # Calculate the row-wise sum for each row
+    row_sums = df_individual_costs.sum(axis=1)
+
+    # Calculate the percentage for each mineral in each row
+    percentage_df = df_individual_costs.div(row_sums, axis=0) * 100
+
+    # Display the percentage dataframe
+    return percentage_df

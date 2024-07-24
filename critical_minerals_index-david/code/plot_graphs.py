@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 def plot_flakey_graphite_prices(flakey_graphite_price, output, name):
     # Extracting years and prices for plotting
@@ -101,5 +102,51 @@ def plot_critical_minerals_index(critical_minerals_index, output, name):
     plt.plot(critical_minerals_index.index, critical_minerals_index["Index"])
     plt.title("Critical Minerals Index")
     # Save plot as png
+    plt.savefig(f"{output}/{name}.png")
+    plt.show()
+
+
+def plot_normalised_data(scaled_data):
+    # Define a list of colors
+    colors = list(mcolors.TABLEAU_COLORS.values())
+
+    # Create a figure and a grid of subplots
+    num_columns = len(scaled_data.columns) - 1  # Excluding "Conglomerate Cost"
+    fig, axes = plt.subplots(num_columns, 1, figsize=(18, 12), sharex=True)
+    
+    # If there's only one subplot, convert axes to a list for consistency
+    if num_columns == 1:
+        axes = [axes]
+    
+    # Plot "Conglomerate Cost" on each subplot for reference
+    for ax in axes:
+        ax.plot(scaled_data.index, scaled_data["Conglomerate Cost"], linewidth=1.5, label="Conglomerate Cost", color="black", zorder=2)
+
+    # Plot other columns on their respective subplots
+    subplot_index = 0
+    for i, column in enumerate(scaled_data.columns):
+        if column != "Conglomerate Cost":
+            color = colors[i % len(colors)]  # Cycle through the colors
+            axes[subplot_index].plot(scaled_data.index, scaled_data[column], label=column, color=color, zorder=1)
+            axes[subplot_index].set_ylabel("z-score")
+            axes[subplot_index].legend()
+            axes[subplot_index].grid()
+            subplot_index += 1
+
+    # Set common labels and title
+    axes[-1].set_xlabel("Date")
+    fig.suptitle("Critical Minerals Index")
+
+    # Show the plot
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.95)  # Adjust the top for the suptitle
+    plt.show()
+
+def plot_mineral_percentages(percentage_df, output, name):
+    percentage_df.plot(kind='bar', stacked=True, figsize=(14, 8), colormap='tab20')
+    plt.xlabel('Date')
+    plt.ylabel('Percentage')
+    plt.title('Percentage of Each Mineral Over Time')
+    plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
     plt.savefig(f"{output}/{name}.png")
     plt.show()
