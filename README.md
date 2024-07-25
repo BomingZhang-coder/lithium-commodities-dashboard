@@ -1,6 +1,7 @@
 # Lithium Projects
 
-### Last updated July 25, 2024
+#### Previously updated July 25, 2024 4:01 pm by David
+#### Last updated July 25, 2024 4:07pm by David
 
 ## Projects
 
