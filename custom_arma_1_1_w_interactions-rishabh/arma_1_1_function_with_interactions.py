@@ -23,7 +23,7 @@ R = alpha0 + [phi(1,0) + phi(1,1) * Z_1] * R_1 + e(t) - [theta(1,0) + theta(1,1)
 
 def arma_1_1_interactions(R_1, Z_1):
     """
-    Inputs: This function takes R_1, and Z_1 as inputs. If these have not been provided in the GitHub yet, please just generate a sequence of random numbers using a random library for both. 
+    Inputs: This function takes R_1, and Z_1 as inputs. These are listed under the "inputs" folder.
     
     Outputs: This function should output the following, preferably in a dictionary or a dataframe format: 
     1.  Adjusted R2 (R superscript 2 subscript adj)
