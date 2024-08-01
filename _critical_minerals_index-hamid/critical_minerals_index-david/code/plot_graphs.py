@@ -1,28 +1,32 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+from utilities import get_filepath
 
-def plot_flakey_graphite_prices(flakey_graphite_price, output, name):
-    # Extracting years and prices for plotting
-    years = list(flakey_graphite_price.keys())
-    prices = list(flakey_graphite_price.values())
+def plot_battery_mineral_requirements():
+    # Code for stacked bar chart plot 
+    return
 
-    # Creating the scatter plot
-    plt.figure(figsize=(10, 5))  # Set the figure size
-    plt.plot(years, prices, color = 'blue')  # Plotting the points
+def plot_flakey_graphite_prices(
+    flakey_graphite_df: pd.DataFrame, 
+    output_folder: str, 
+    name: str
+    ) -> None:
+    
+    # Creating the plot 
+    plt.figure(figsize = (10, 5))  # Set the figure size
+    plt.plot(flakey_graphite_df.index, flakey_graphite_df, color = 'blue')  # Plotting the points
 
     # Adding title and labels
     plt.title('Flakey Graphite Price Over Years')
     plt.xlabel('Year')
     plt.ylabel('Price (USD per ton)')
 
-    # Optional: Add a grid for better readability
+    # Adding a grid for better visibility
     plt.grid(True)
-    
-    # Save plot as png
-    plt.savefig(f"{output}/{name}.png")
+    plt.savefig(f"{output_folder}/{name}.png")
 
-    # Show the plot
+    # Display the graph
     plt.show()
 
 def plot_spot_prices(minerals_df, graph_type, output, name):
@@ -143,10 +147,31 @@ def plot_normalised_data(scaled_data):
     plt.show()
 
 def plot_mineral_percentages(percentage_df, output, name):
-    percentage_df.plot(kind='bar', stacked=True, figsize=(14, 8), colormap='tab20')
-    plt.xlabel('Date')
-    plt.ylabel('Percentage')
-    plt.title('Percentage of Each Mineral Over Time')
-    plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+    # Plotting stacked bar chart
+    ax = percentage_df.plot(kind='bar', stacked=True, figsize=(14, 8), colormap='tab20')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Percentage')
+    ax.set_title('Percentage of Each Mineral Over Time')
+    ax.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+    ax.set_xticklabels([d.strftime('%Y-%m-%d') for d in percentage_df.index], rotation=45, ha='right')
+
+    plt.tight_layout()
+    plt.show()
     plt.savefig(f"{output}/{name}.png")
     plt.show()
+
+# def plot_events_critical_minerals(critical_minerals_index, values):
+    
+#     plt.figure(figsize=(12, 12))
+#     plt.grid()
+#     plt.xlabel("Date")
+#     plt.plot(critical_minerals_index.index, critical_minerals_index["Index"])
+#     plt.scatter(datetime.strptime("2018-03-01", "%Y-%m-%d"), value_on_mar1, label = "Trump declares tariffs on steel and aluminium", color = "red")
+#     plt.scatter(datetime.strptime("2020-01-01", "%Y-%m-%d"), value_on_jan20, label = "COVID announced", color = "orange")
+#     plt.scatter(datetime.strptime("2022-02-24", "%Y-%m-%d"), value_near_feb24, label = "Russia invades Ukraine on Feb 24, 2022", color = "green")
+#     plt.scatter(datetime.strptime("2023-03-28", "%Y-%m-%d"), value_on_mar28, label = "US and Japan sign critical minerals trade agreement", color = "blue")
+#     plt.scatter(datetime.strptime("2023-10-07", "%Y-%m-%d"), value_on_oct23, label = "Israel-Hamas War", color = "purple")
+#     plt.scatter(datetime.strptime("2023-12-13", "%Y-%m-%d"), value_on_dec13, label = "COP28 agrees on transition away from fossil fuels", color = "pink")
+#     plt.title("Critical Minerals Index")
+#     plt.legend()
+#     plt.show()
