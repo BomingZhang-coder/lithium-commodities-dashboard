@@ -1,24 +1,27 @@
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error, r2_score
+from math import log
 import matplotlib.pyplot as plt
 
-def get_lithium_market_share_data(
+def get_modelling_data(
     minerals_market_share: pd.DataFrame, 
     battery_yearly_market_shares: pd.DataFrame, 
     minerals_monthly_spot_prices: pd.DataFrame,
+    exchange_rates: pd.DataFrame, 
+    inflation_consumer_prices: pd.DataFrame,
+    google_trends_lithium: pd.DataFrame, 
     metadata
 ) -> pd.DataFrame: 
     
     # Create a DataFrame to store the data we need
-    lithium_market_share_data = pd.DataFrame(index = minerals_market_share.index)
+    modelling_data = pd.DataFrame(index = minerals_market_share.index)
     
     # Get the lithium market share - this is going to be our target 
-    lithium_market_share_data["lithium_market_share"] = minerals_market_share[["lithium"]]
+    modelling_data["lithium_market_share"] = minerals_market_share[["lithium"]]
     
     # Get the LFP market share 
     lfp_market_share = battery_yearly_market_shares[["lfp"]]
@@ -27,98 +30,167 @@ def get_lithium_market_share_data(
     lfp_market_share.index = pd.to_datetime(lfp_market_share.index, format = "%Y")
     
     # Extend the yearly market share data to be monthly 
-    lfp_market_share_expanded = lfp_market_share.reindex(lithium_market_share_data.index, method = "ffill")
+    lfp_market_share_expanded = lfp_market_share.reindex(modelling_data.index, method = "ffill")
     
     # Add to the data 
-    lithium_market_share_data["lfp_market_share"] = lfp_market_share_expanded
-    
+    modelling_data["lfp_market_share"] = lfp_market_share_expanded
+
     # Add lithium spot prices to the data
-    lithium_market_share_data["lithium_spot_prices"] = minerals_monthly_spot_prices[["lithium"]]
-    
-    return lithium_market_share_data
+    modelling_data["lithium_spot_prices"] = minerals_monthly_spot_prices[["lithium"]]
 
-def model_lithium_market_share(lithium_market_share_data, metadata):
-    
-    # Get the X and y
-    X = lithium_market_share_data[["lfp_market_share", "lithium_spot_prices"]]
-    y = lithium_market_share_data[["lithium_market_share"]]
-    
-    # Normalize the features
-    X_scaler = StandardScaler()
-    X_scaled = X_scaler.fit_transform(X)
-    
-    # Get the scaled value of the predicted LFP market share
-    lfp_market_share_value = 0.6
-    lfp_market_share_scaled = X_scaler.transform([[lfp_market_share_value, 0]])[0][0]
-    print(f"LFP Market Share of 0.6 scaled: {lfp_market_share_scaled}")
-    
-    # Normalize the target, just for graphing
-    y_scaler = StandardScaler()
-    y_scaled = y_scaler.fit_transform(y)
-    
-    # Convert X_scaled back to DataFrame to retain column names
-    X_scaled = pd.DataFrame(X_scaled, columns = X.columns, index = X.index)
-    y_scaled = pd.DataFrame(y_scaled, columns = y.columns, index = y.index)
-    
-    # Get the scaled value of the last known spot price of lithium
-    last_lithium_spot_prices_scaled = X_scaled["lithium_spot_prices"].iloc[-1]
-    print(f"Last known scaled spot price of lithium: {last_lithium_spot_prices_scaled}")
-    
-    plt.figure(figsize=(10, 6))
-    for column in X_scaled.columns:
-        plt.plot(lithium_market_share_data.index, X_scaled[column], label=f'{column}', linestyle='--')
-    plt.plot(y.index, y_scaled, label = 'Target: Lithium Market Share (Scaled for graphing)', color = 'blue')
-    plt.xlabel('Date')
-    plt.ylabel('Values')
-    plt.grid()
-    plt.title('Features vs Target')
-    plt.legend()
-    #plt.show()
-    
-    # Linear Regression
-    linear_reg = LinearRegression()
-    linear_reg.fit(X_scaled, y)
-    y_pred_lr = linear_reg.predict(X_scaled)
-    r2_lr = r2_score(y, y_pred_lr)
-    rmse_lr = np.sqrt(mean_squared_error(y, y_pred_lr))
-    coefficients_lr = dict(zip(X.columns, linear_reg.coef_[0]))
-    coefficients_lr['intercept'] = linear_reg.intercept_[0]
+    for column in exchange_rates.columns: 
+        modelling_data[column] = exchange_rates[[column]]
 
-    # Decision Tree Regressor
-    tree_reg = DecisionTreeRegressor(random_state=42)
-    tree_reg.fit(X, y)
-    y_pred_tr = tree_reg.predict(X)
-    r2_tr = r2_score(y, y_pred_tr)
-    rmse_tr = np.sqrt(mean_squared_error(y, y_pred_tr))
-    coefficients_tr = dict(zip(X.columns, tree_reg.feature_importances_))
+    for column in inflation_consumer_prices.columns: 
+        modelling_data[column] = inflation_consumer_prices[[column]]
+    
+    google_trends_column = google_trends_lithium.columns[0]
+    modelling_data[google_trends_column] = google_trends_lithium[[google_trends_column]]
 
-    # Create a dataframe to store results
-    results = pd.DataFrame({
-        'Model': ['Linear Regression', 'Decision Tree'],
-        'R^2': [r2_lr, r2_tr],
-        'RMSE': [rmse_lr, rmse_tr],
-        'Coefficients': [coefficients_lr, coefficients_tr]
-    }).set_index("Model")
-    
-    # Plotting the linear regression results
-    plt.figure(figsize = (10, 6))
-    plt.plot(y.index, y, label = 'Actual Values', color = 'blue')
-    plt.plot(y.index, y_pred_lr, label='Predicted Values (Linear Regression)', color='red', linestyle='--')
-    plt.xlabel('Date')
-    plt.ylabel('Lithium Market Share')
-    plt.title('Linear Regression: Actual vs Predicted')
-    plt.legend()
-    plt.grid()
-    #plt.show()
-    
-    return results
+    modelling_data.dropna(inplace = True)
 
-def get_linear_regression_parameters(results): 
-    
-    # Get the parameters from the Linear Regression 
-    parameters = results.loc['Linear Regression', 'Coefficients']
-    
-    # Convert the parameters to a dataframe format 
-    parameters = pd.DataFrame.from_dict(parameters, orient = "index", columns = ["Coefficients"])
-    
-    return parameters
+    modelling_data.to_csv("results/modelling_data.csv")
+
+    return modelling_data
+
+def model_lithium_market_share(data, metadata):
+    # Function to perform the analysis
+    def perform_analysis(data, include_google_trends):
+        if not include_google_trends:
+            data = data.drop(columns=['google_trends_interest'])
+            
+        # Normalize the data (z-score normalization)
+        scaler = StandardScaler()
+        data_scaled = pd.DataFrame(scaler.fit_transform(data.drop(columns=['lithium_market_share'])), columns=data.columns[1:], index=data.index)
+        data_scaled['lithium_market_share'] = data['lithium_market_share'].values
+
+        # Parameters for rolling window
+        window_size = 12
+        n_predictions = len(data) - window_size
+
+        # Initialize lists to store results
+        results = {
+            'linear_regression': {'predictions': [], 'actuals': [], 'dates': []},
+            'decision_tree': {'predictions': [], 'actuals': [], 'dates': []}
+        }
+
+        # Store the last fitted models for extracting coefficients and feature importances
+        last_lin_reg = None
+        last_tree = None
+
+        # Rolling window evaluation
+        for start in range(n_predictions):
+            end = start + window_size
+            train_data = data_scaled.iloc[start:end]
+            test_data = data_scaled.iloc[end:end+1]
+
+            X_train = train_data.drop(columns=['lithium_market_share'])
+            y_train = train_data['lithium_market_share']
+            X_test = test_data.drop(columns=['lithium_market_share'])
+            y_test = test_data['lithium_market_share'].values
+            test_date = data.index[end:end+1].values[0]
+
+            # Linear Regression
+            lin_reg = LinearRegression()
+            lin_reg.fit(X_train, y_train)
+            y_pred_lin = lin_reg.predict(X_test)
+            
+            # Replace negative predictions with NaN
+            y_pred_lin = [pred if pred >= 0 else np.nan for pred in y_pred_lin]
+            
+            results['linear_regression']['predictions'].extend(y_pred_lin)
+            results['linear_regression']['actuals'].extend(y_test)
+            results['linear_regression']['dates'].extend([test_date])
+            last_lin_reg = lin_reg  # Store the last fitted linear regression model
+            
+            # Decision Tree
+            tree = DecisionTreeRegressor()
+            tree.fit(X_train, y_train)
+            y_pred_tree = tree.predict(X_test)
+            
+            # Replace negative predictions with NaN
+            y_pred_tree = [pred if pred >= 0 else np.nan for pred in y_pred_tree]
+            
+            results['decision_tree']['predictions'].extend(y_pred_tree)
+            results['decision_tree']['actuals'].extend(y_test)
+            results['decision_tree']['dates'].extend([test_date])
+            last_tree = tree  # Store the last fitted decision tree model
+
+        # Calculate metrics
+        def calculate_metrics(actuals, predictions, k):
+            valid_indices = [i for i in range(len(predictions)) if not np.isnan(predictions[i])]
+            valid_actuals = [actuals[i] for i in valid_indices]
+            valid_predictions = [predictions[i] for i in valid_indices]
+            
+            if len(valid_actuals) == 0 or len(valid_predictions) == 0:
+                return np.nan, np.nan, np.nan, np.nan
+            
+            mse = mean_squared_error(valid_actuals, valid_predictions)
+            rmse = np.sqrt(mse)
+            r2 = r2_score(valid_actuals, valid_predictions)
+            n = len(valid_actuals)
+            aic = n * log(mse) + 2 * k
+            bic = n * log(mse) + k * log(n)
+            return rmse, r2, aic, bic
+
+        k = X_train.shape[1]  # number of predictors
+
+        lin_metrics = calculate_metrics(results['linear_regression']['actuals'], results['linear_regression']['predictions'], k)
+        tree_metrics = calculate_metrics(results['decision_tree']['actuals'], results['decision_tree']['predictions'], k)
+
+        average_metrics = pd.DataFrame({
+            'Linear Regression': lin_metrics,
+            'Decision Tree': tree_metrics
+        }, index=['RMSE', 'Adjusted R2', 'AIC', 'BIC'])
+
+        # Extract coefficients from the linear regression model
+        coefficients = pd.DataFrame({
+            'Feature': X_train.columns,
+            'Linear Regression Coefficients': last_lin_reg.coef_
+        })
+
+        # Extract feature importances from the decision tree model
+        feature_importances = pd.DataFrame({
+            'Feature': X_train.columns,
+            'Decision Tree Importances': last_tree.feature_importances_
+        })
+
+        # Combine both into a single DataFrame for display
+        importance_df = pd.merge(coefficients, feature_importances, on='Feature')
+
+        return average_metrics, importance_df, results
+
+    # Perform analysis including google_trends_interest
+    metrics_incl, importance_incl, results_incl = perform_analysis(data, include_google_trends=True)
+
+    # Perform analysis excluding google_trends_interest
+    metrics_excl, importance_excl, results_excl = perform_analysis(data, include_google_trends=False)
+
+    print("\nAverage Metrics Including Google Trends Interest:")
+    print(metrics_incl)
+    print("\nCoefficients and Feature Importances Including Google Trends Interest:")
+    print(importance_incl)
+
+    print("\nAverage Metrics Excluding Google Trends Interest:")
+    print(metrics_excl)
+    print("\nCoefficients and Feature Importances Excluding Google Trends Interest")
+    print(importance_excl)
+
+    # Plotting the results
+    def plot_results(results, title):
+        plt.figure(figsize=(12, 6))
+        plt.plot(results['linear_regression']['dates'], results['linear_regression']['actuals'], label='Actual Values', marker='o')
+        plt.plot(results['linear_regression']['dates'], results['linear_regression']['predictions'], label='Linear Regression Predictions', marker='x')
+        plt.plot(results['linear_regression']['dates'], results['decision_tree']['predictions'], label='Decision Tree Predictions', marker='s')
+        plt.title(title)
+        plt.xlabel('Date')
+        plt.ylabel('Lithium Market Share')
+        plt.xticks(rotation=45)
+        plt.legend()
+        plt.show()
+
+    # Plot results including google_trends_interest
+    plot_results(results_incl, 'Predictions vs Actuals Including Google Trends Interest')
+
+    # Plot results excluding google_trends_interest
+    plot_results(results_excl, 'Predictions vs Actuals Excluding Google Trends Interest')

@@ -3,7 +3,8 @@ from typing import Dict, Tuple
 
 def compress_metadata(
     display: Dict[str, bool], 
-    folders: Dict[str, str]
+    folders: Dict[str, str],
+    interpolation: Dict[str, bool]
     ) -> dict:
     
     # Put all the information in a dictionary 

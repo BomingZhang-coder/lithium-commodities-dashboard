@@ -242,96 +242,73 @@ def get_battery_market_shares(
     
     return battery_market_share
 
-
-
-
-# This is terrible, convenient code. Needs fixing. 
-def get_costs(minerals_required, spot_prices_df, battery_names):
-    # Remove all rows where we have incomplete data
-    spot_prices_df = spot_prices_df.dropna()
+def get_exchange_rates(
+    exchange_rate_names: list,
+    metadata: dict
+    ) -> pd.DataFrame: 
     
-    cost_df = pd.DataFrame()
-    
-    name_index = 0
-    for battery in minerals_required: 
-        # Get the minerals required to make the battery
-        minerals_list = battery.keys()
-        # Filter spot prices to get just the spot prices of the minerals required to make the battery
-        battery_cost_df = spot_prices_df[minerals_list]
-        for mineral in minerals_list: 
-            battery_cost_df[mineral] *= battery[mineral]
-        battery_cost_df["total_cost"] = battery_cost_df.sum(axis = 1)
-        #all_costs.append(battery_cost_df["total_cost"])
-        cost_df[battery_names[name_index] + " Cathode + Anode Cost"] = battery_cost_df["total_cost"].round(2)
-        name_index += 1
+    for exchange_rate_name in exchange_rate_names: 
         
-    return cost_df
-
-def get_mineral_market_share(names, minerals_required_data, spot_prices_df, market_share_df):
-    minerals_required_data.rename(index = names, inplace = True)
-    
-    years = market_share_df.index.tolist()
-    
-    scaled_minerals_required = pd.DataFrame(index = years)
-    
-    yearly_minerals_required = {}
-    
-    for year in years: 
-        market_shares = market_share_df.loc[year]
+        exchange_rate = pd.read_csv(f"datasets/macroeconomics/{exchange_rate_name}.csv")
         
-        batteries = market_shares.index.tolist()
+        exchange_rate_name = exchange_rate_name.lower()
+        exchange_rate.columns = ["date", exchange_rate_name]
         
-        minerals_required = []
-        for battery in batteries: 
-            if battery.lower() != "other":
-                minerals_required.append(market_shares.loc[battery] * minerals_required_data.loc[battery])
-                
-        yearly_minerals_required[year] = minerals_required
-
-
-    yearly_total_minerals_required = {}
-
-    # Iterate through the dictionary
-    for year, series_list in yearly_minerals_required.items():
-        # Create an empty series to store the sum of minerals
-        sum_series = pd.Series(dtype=float)
-        for series in series_list:
-            sum_series = sum_series.add(series, fill_value=0)
+        exchange_rate["date"] = pd.to_datetime(exchange_rate["date"])
         
-        yearly_total_minerals_required[year] = sum_series
+        exchange_rate.set_index("date", inplace = True)
+        
+        # Convert the 'value' column to floats, replacing dots with NaNs
+        exchange_rate[exchange_rate_name] = pd.to_numeric(exchange_rate[exchange_rate_name], errors = 'coerce')
 
-    # Create a DataFrame from the dictionary
-    mineral_share_df = pd.DataFrame(yearly_total_minerals_required).T
+        # Drop rows with NaNs 
+        exchange_rate.dropna(inplace = True)
+        
+        exchange_rate_monthly = exchange_rate.resample("M").mean()
+        
+        # Adjust the index to show the first value of each month
+        exchange_rate_monthly.index = exchange_rate_monthly.index.to_period('M').to_timestamp()
+        
+    return exchange_rate_monthly
+
+def get_inflation_consumer_prices(
+    inflation_list: list,
+    metadata: dict
+    ) -> pd.DataFrame: 
     
-    # Display the DataFrame
-    # print(mineral_share_df)
-    # print(spot_prices_df.dropna())
+    for country in inflation_list: 
+        
+        inflation_country = pd.read_csv(f"datasets/macroeconomics/inflation_consumer_prices_{country}.csv")
+        
+        country_column = country.lower() + "_inflation"
+        inflation_country.columns = ["date", country_column]
+        
+        inflation_country["date"] = pd.to_datetime(inflation_country["date"])
+        
+        inflation_country.set_index("date", inplace = True)
+        
+        inflation_country[country_column] = pd.to_numeric(inflation_country[country_column], errors = 'coerce')
+
+        # Drop rows with NaNs 
+        inflation_country.dropna(inplace = True)
     
-    # Ensure columns match and fill any missing columns with zeroes
-    required_minerals = mineral_share_df.columns
-    spot_prices_df = spot_prices_df[required_minerals].fillna(0)
-
-    # Function to get the requirement year from the date
-    def get_requirement_year(date):
-        return date.year
-
-    # Apply the function to get the corresponding year requirements for each month
-    years = spot_prices_df.index.year
-    requirements_for_each_month = mineral_share_df.reindex(years).reset_index(drop=True)
-
-    # Multiply each row by the corresponding year requirements to get individual mineral costs
-    individual_costs = spot_prices_df.values * requirements_for_each_month.values
-
-    # Create a DataFrame with the individual mineral costs and the corresponding dates
-    df_individual_costs = pd.DataFrame(individual_costs, index=spot_prices_df.index, columns=spot_prices_df.columns)
-
-    df_individual_costs.dropna(inplace = True)
+        monthly_inflation_country = inflation_country.resample('M').ffill()
     
-    # Calculate the row-wise sum for each row
-    row_sums = df_individual_costs.sum(axis=1)
+        # Adjust the index to show the first value of each month
+        monthly_inflation_country.index = monthly_inflation_country.index.to_period('M').to_timestamp()
+    
+    return monthly_inflation_country
 
-    # Calculate the percentage for each mineral in each row
-    percentage_df = df_individual_costs.div(row_sums, axis=0) * 100
-
-    # Display the percentage dataframe
-    return percentage_df
+def get_google_trends_lithium(name, metadata): 
+    
+    google_trends_filepath = get_filepath("datasets/news", name)
+    
+    google_trends = pd.read_csv(google_trends_filepath)
+    
+    google_trends.columns = ["date", "google_trends_interest"]
+    
+    google_trends['date'] = pd.to_datetime(google_trends['date'], format='%Y-%m')
+    
+    google_trends.set_index("date", inplace = True)
+    
+    return google_trends
