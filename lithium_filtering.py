@@ -3,10 +3,231 @@ import os
 import concurrent.futures
 import gc
 import logging
+from itertools import product
 
 logging.basicConfig(level=logging.INFO)
 
-lithium_keywords = ['lithium']
+def generate_url_combinations(keywords_raw_list):
+    # Initialize the output list
+    keywords = []
+    
+    for keyword in keywords_raw_list:
+    
+         # Initialize a list for all possible combinations if there is a space in the keyword
+         url_combinations = []
+    
+         # Check if the input string contains spaces
+         if ' ' in keyword:
+             # Define the separators we want to use
+             separators = ['+', '_', '%20', '-', '']
+        
+             # Split the input string into words
+             words = keyword.lower().split()
+        
+             # Generate all combinations of separators between words
+             all_combinations = list(product(separators, repeat=len(words) - 1))
+        
+             # Create the final list of URL combinations
+             for combination in all_combinations:
+                 url = words[0]
+                 for word, separator in zip(words[1:], combination):
+                     url += separator + word
+                 url_combinations.append(url)
+         else:
+             # If there are no spaces, append the original string in lowercase
+             url_combinations.append(keyword.lower())
+         
+         keywords += url_combinations
+
+    return keywords
+
+lithium_keywords = generate_url_combinations([
+     # Critical Minerals
+     'lithium',
+     'copper',
+     'cobalt',
+     'manganese',
+     'nickel',
+     'graphite',
+
+     # Battery-related 
+     'battery',
+     'batterie',
+
+     'lfp',
+     'nmc',
+     'nca',
+
+     # Biggest Lithium-ion Manufacturers
+     'catl',
+     'contemporary amperex technology',
+     'lg energy',
+     'lg chem',
+     'panasonic',
+     'samsung',
+     'svolt',
+     'lishen',
+     'eve energy',
+
+     # Mining-related 
+     'mine explosion',
+     'mining explosion',
+
+     'mine disaster',
+     'mining disaster',
+
+     'mine accident',
+     'mining accident',
+
+     'mine fatality',
+     'mine fatalities',
+     'mining fatality',
+     'mining fatalities',
+
+     'mine collapse',
+     'mining collapse',
+
+     'mine safety',
+     'mining safety',
+
+     'mine fire',
+     'mining fire',
+
+     'mine flood',
+     'mining flood',
+
+     'mine incident',
+     'mining incident',
+
+     'mine spill',
+     'mining spill',
+
+     'mine environment',
+     'mining environment',
+
+     'mine pollute',
+     'mine pollution',
+     'mining pollute',
+     'mining pollution',
+
+     'mining investment',
+     'mine investment',
+
+     'mineral prospect',
+     'mine prospect', 
+     'mining prospect',
+
+     'mine regulation',
+     'mining regulation',
+
+     # Lithium Mining Companies
+     'jiangxi special electric motor',
+
+     'ganfeng',
+
+     'sichuan yahua',
+
+     'albemarle corporation',
+     'albemarle corp',
+     'albemarle mining',
+     'albemarle mine',
+
+     'eramet',
+
+     'mineral resources', 
+
+     'pilbara minerals',
+
+     'sociedad química y minera',
+     'sociedad quimica y minera',
+     'sociedad qu mica y minera',
+     'SQM',
+
+     'sayona',
+
+     'wealth minerals',
+
+     'arcadium',
+     'allkem',
+     'livent',
+     'orocobre',
+     'galaxy resources',
+
+     'rio tinto',
+
+     'nmdc limited',
+     'nmdc ltd',
+     'national mineral development corporation', 
+     'national mineral development corp',
+
+     'medaro mining',
+     'medaro mine', 
+
+     'zijin mining',
+     'zijin mine',
+
+     # Macroeconomic Factors and Geopolitical Factors
+     'us economy',
+     'u s economy',
+     'us economic',
+     'u s economic',
+
+     'china economy',
+     'chinas economy',
+     'china economic',
+     'chinas economic', 
+
+     'us inflation',
+     'u s inflation',
+
+     'china inflation', 
+     'chinas inflation',
+     
+     'trade war',
+     'trade agreement',
+
+     # EV-related queries
+     'ev sales',
+     'ev market',
+     'ev adoption',
+     'ev demand',
+     'ev cost',
+     'ev price',
+     'ev maker',
+     'ev automaker',
+     'ev manufacturer',
+
+     'ev charger',
+     'ev charging', 
+     'ev supercharger',
+     'ev supercharging',
+
+     'ev tax',
+     'ev rebate',
+     'ev credit',
+
+     'ev policy',
+     'ev policies',
+     'ev regulation', 
+     'ev regulations',
+
+     # Biggest players in the EV market
+     'byd', 
+     'tesla', 
+     'volkswagen',
+     'general motors',
+     'stellantis',
+     'bmw',
+     'hyundai',
+     'mercedes benz',
+     'geely',
+     'gac motor',
+     'changan',
+])
+
+# print(lithium_keywords)
+# quit()
+
 columns_to_keep = ['DATE', 'DocumentIdentifier', 'V2Themes', 'V2Tone']
 checkpoint_dir = '/Volumes/T5EVO/gdelt_download/Lithium/checkpoints/'
 
@@ -31,7 +252,7 @@ def clean_and_process_data(file):
 
 def preprocess_data_for_year(year_folder):
     data_folder = f'/Volumes/T5EVO/gdelt_download/{year_folder}'
-    output_file = f'/Volumes/T5EVO/gdelt_download/Lithium/Lithium_{year_folder}.csv'
+    output_file = f'/Users/mac/Documents/filtered_gdelt_gkg_2.1_news/filtered_news_{year_folder}.csv'
     processed_files_log = f'{checkpoint_dir}processed_files_{year_folder}.txt'
 
     if os.path.exists(processed_files_log):
