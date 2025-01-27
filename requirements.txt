@@ -14,10 +14,6 @@ plotly==5.24.1
 pluggy==1.5.0
 pymongo==4.10.1
 pynput==1.7.7
-pyobjc-framework-ApplicationServices==10.3.1
-pyobjc-framework-Cocoa==10.3.1
-pyobjc-framework-CoreText==10.3.1
-pyobjc-framework-Quartz==10.3.1
 pytest==8.3.4
 pytest-cov==6.0.0
 python-dateutil==2.9.0.post0
