@@ -229,7 +229,8 @@ lithium_keywords = generate_url_combinations([
 # quit()
 
 columns_to_keep = ['DATE', 'DocumentIdentifier', 'V2Themes', 'V2Tone']
-checkpoint_dir = '/Volumes/T5EVO/gdelt_download/Lithium/checkpoints/'
+checkpoint_dir = '/opt/render/project/src/checkpoints/'
+os.makedirs(checkpoint_dir, exist_ok=True)
 
 os.makedirs(checkpoint_dir, exist_ok=True)
 
@@ -251,9 +252,10 @@ def clean_and_process_data(file):
         return pd.DataFrame()
 
 def preprocess_data_for_year(year_folder):
-    data_folder = f'/Volumes/T5EVO/gdelt_download/{year_folder}'
-    output_file = f'/Users/mac/Documents/filtered_gdelt_gkg_2.1_news/filtered_news_{year_folder}.csv'
+    data_folder = f'/opt/render/project/src/{year_folder}'
+    output_file = f'/opt/render/project/src/filtered_news_{year_folder}.csv'
     processed_files_log = f'{checkpoint_dir}processed_files_{year_folder}.txt'
+
 
     if os.path.exists(processed_files_log):
         with open(processed_files_log, 'r') as f:
