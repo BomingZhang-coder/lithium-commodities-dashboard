@@ -254,8 +254,12 @@ def clean_and_process_data(file):
 def preprocess_data_for_year(year_folder):
     data_folder = f'/opt/render/project/src/{year_folder}'
     output_file = f'/opt/render/project/src/filtered_news_{year_folder}.csv'
-    processed_files_log = f'{checkpoint_dir}processed_files_{year_folder}.txt'
+    processed_files_log = f'{checkpoint_dir}/processed_files_{year_folder}.txt'
 
+    # Create the data folder if it doesn't exist
+    if not os.path.exists(data_folder):
+        os.makedirs(data_folder, exist_ok=True)
+        logging.warning(f"Warning: {data_folder} does not exist. Created an empty directory.")
 
     if os.path.exists(processed_files_log):
         with open(processed_files_log, 'r') as f:
@@ -264,6 +268,12 @@ def preprocess_data_for_year(year_folder):
         processed_files = set()
 
     raw_data_files = [os.path.join(data_folder, f) for f in os.listdir(data_folder) if f.endswith('.csv')]
+
+    # Skip processing if no CSV files are found
+    if not raw_data_files:
+        logging.warning(f"Warning: No CSV files found in {data_folder}. Skipping this year.")
+        return
+
     raw_data_files = [f for f in raw_data_files if f not in processed_files]
 
     all_cleaned_data = []
