@@ -229,8 +229,7 @@ lithium_keywords = generate_url_combinations([
 # quit()
 
 columns_to_keep = ['DATE', 'DocumentIdentifier', 'V2Themes', 'V2Tone']
-checkpoint_dir = '/opt/render/project/src/checkpoints/'
-os.makedirs(checkpoint_dir, exist_ok=True)
+checkpoint_dir = checkpoint_dir = os.path.join(os.getcwd(), "checkpoints")
 
 os.makedirs(checkpoint_dir, exist_ok=True)
 
